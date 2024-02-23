@@ -1,0 +1,87 @@
+Take home project description:
+IDEA::
+Design an address book which can store first_name, last_name, address, phone_number
+and we can search contacts using name (I have assumed the search query will be full name) and phone_number which should be capable of storing 1billion+ data and have great search capability.
+
+My code implements the storage functionality in two data structures, each time a user enters his information (first_name, last_name, address, phone_number), it will be stored in a Trie(for storing based on phone_number) and a vector of unordered_map.
+1. For searching on the basis of phone_number I have stored the phone_number in a Trie where each node has a pointer to 10 chidlre nodes, boolean isLast to denote that this is the end of the phone_number, and UserInfo object to store user info in the last node where isLast is true. Now when a search is being done on the basis of phone_number, code will lookup into the Trie going from left to right on phone_number string and top-to-bottom in the Trie. When it sees the "isLast" bool to be true for the last character of the phone_number, it simply returns the UserInfo stored for that particular node. Complexity : O(length of phone_number(typically 10)).
+
+2. For searching on the basis of name (full_name) I have made an assumption that user will have to enter the full name and in a case sensitive fashion, I have also assumed that all the names will be small cased (for simplicity), so that it gets stored in an unordered_map where the map element will have full_name as key and UserInfo as obj. Now as we know that an unordered_map can only store upto 10^7 entries at max, I thought to segment the users on the basis of their names(first_name) into a prime number of unordered_maps so as store 10^7*1249 number of users. And this approach is just for segregating and collision in this case is not an issue as we are not trying to hash it but just segregating it so as to increase the storage without compromising on the time complexity for search.
+Now, if a user searches for a full_name in this vector of unordered_maps, first this which is done is his/her first_name is derived from the full name and hashed and looked up for which bucket does it belong. Now taking the full name as key, we can search for the UserInfo in that particular bucket of unordered_map. Complexity: 
+O(max(length of full_name, hashing first_name(O(length of first_name))));
+
+
+To run the code:
+1. Extract the files in zip.
+2. Run g++ main.cpp. I have used g++ compiler as my c++ compiler.
+3. A executable file will be generated named a.exe.
+4. Run a.exe.
+
+To test the code:
+1. As the run begins, you will be prompted to "Enter an operation", enter "add" if you want to add a user and "search" if you want to search for a user without inverted codes.
+2. If "add" has been entered, you will be prompted to "Enter Firstname, Lastname, Phonenumber, Address in same order", be carefull with the order of the entries, all should be space separated. Upon entry, you will be prompted "User added successfully by the name!!! //Full_name//".
+3. If "search" has been entered then you will be prompted to enter search type ("name"/ "phone_number"). 
+4. If "name" as been typed in the previous point, then simply enter the full_name and press enter. You will all the users with the same full_name.
+5. If "phone_number" has been entered, the simply enter your phone_number and press enter. The user correponding to that phone_number will be shown.
+
+A test run has been shown below::
+
+
+
+Below is a trial run for the code::::::::
+
+
+
+Enter an operation
+add
+Enter Firstname, Lastname, Phonenumber, Address in same order
+john cena 8721872320 pimple
+User added successfully by the name!!! john cena
+Enter an operation
+search
+Enter search type (name/phone_number) :::
+name
+john cena
+name enteredjohn cena
+Here are the users with name as john cena
+john cena pimple 8721872320
+Enter an operation
+search
+Enter search type (name/phone_number) :::
+phone_number
+8721872320
+Here is the user with phone_number as 8721872320
+john cena pimple 8721872320
+Enter an operation
+add
+Enter Firstname, Lastname, Phonenumber, Address in same order
+john cena 9872987414 yyy
+User added successfully by the name!!! john cena
+Enter an operation
+search
+Enter search type (name/phone_number) :::
+name
+john cena
+name enteredjohn cena
+Here are the users with name as john cena
+john cena pimple 8721872320
+john cena yyy 9872987414
+Enter an operation
+search
+Enter search type (name/phone_number) :::
+9872987414
+Enter an operation
+search
+Enter search type (name/phone_number) :::
+phone_number
+9872987414
+Here is the user with phone_number as 9872987414
+john cena yyy 9872987414
+
+
+
+
+
+
+
+
